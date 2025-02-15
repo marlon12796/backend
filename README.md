@@ -1,6 +1,6 @@
 # 🎵 Realtime Spotify Application ✨  
 
-![Demo App](./fronted/public/screenshot-for-readme.png)  
+![Demo App](./frontend/public/screenshot-for-readme.png)  
 
 ## 🚀 Descripción  
 

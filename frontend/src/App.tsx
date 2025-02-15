@@ -1,13 +1,16 @@
 import { Route, Routes } from "react-router-dom";
 import { AuthenticateWithRedirectCallback } from "@clerk/clerk-react";
 import { Toaster } from "react-hot-toast";
-import AuthCallbackPage from "./pages/auth-callback/AuthCallbackPage";
-import AdminPage from "./pages/admin/AdminPage";
 import MainLayout from "./layout/MainLayout";
-import NotFoundPage from "./pages/404/NotFoundPage";
-import HomePage from "./pages/home/HomePage";
-import ChatPage from "./pages/chat/ChatPage";
-import AlbumPage from "./pages/album/AlbumPage";
+import { lazy } from "react";
+
+// Carga diferida (lazy loading)
+const AuthCallbackPage = lazy(() => import("./pages/auth-callback/AuthCallbackPage"));
+const AdminPage = lazy(() => import("./pages/admin/AdminPage"));
+const NotFoundPage = lazy(() => import("./pages/404/NotFoundPage"));
+const HomePage = lazy(() => import("./pages/home/HomePage"));
+const ChatPage = lazy(() => import("./pages/chat/ChatPage"));
+const AlbumPage = lazy(() => import("./pages/album/AlbumPage"));
 function App() {
   return (
     <>
