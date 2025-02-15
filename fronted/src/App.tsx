@@ -4,6 +4,7 @@ import { Toaster } from "react-hot-toast";
 import AuthCallbackPage from "./pages/auth-callback/AuthCallbackPage";
 import AdminPage from "./pages/admin/AdminPage";
 import MainLayout from "./layout/MainLayout";
+import NotFoundPage from "./pages/404/NotFoundPage";
 function App() {
   return (
     <>
@@ -15,7 +16,10 @@ function App() {
 
         <Route path='/auth-callback' element={<AuthCallbackPage />} />
         <Route path='/admin' element={<AdminPage />} />
-        <Route element={<MainLayout />}></Route>
+        <Route element={<MainLayout />}>
+
+          <Route path='*' element={<NotFoundPage />} />
+        </Route>
       </Routes>
       <Toaster />
     </>
