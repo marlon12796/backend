@@ -26,3 +26,4 @@ dist/
 build/
 .DS_Store
 .en
+.env
