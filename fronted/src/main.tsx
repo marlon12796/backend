@@ -19,7 +19,6 @@ createRoot(document.getElementById("root")!).render(
         <BrowserRouter>
           <App />
         </BrowserRouter>
-
       </AuthProvider>
     </ClerkProvider>
   </StrictMode>
