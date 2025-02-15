@@ -1,0 +1,28 @@
+# Node.js
+node_modules/
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-store/
+
+# Editor/IDE
+.vscode/
+.idea/
+*.swp
+
+# Logs
+logs/
+*.log
+*.log.*
+npm-debug.log
+pnpm-debug.log
+yarn-debug.log
+lerna-debug.log
+.stacktrace
+
+# Builds & Output
+dist/
+build/
+.DS_Store
+.en

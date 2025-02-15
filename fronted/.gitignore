@@ -1,0 +1,18 @@
+# Node.js
+node_modules/
+
+# Builds
+build/
+dist/
+
+# Env
+.env
+.env.local
+.env.production
+.env.development
+.env.test
+
+# Cache
+.npm/
+.pnpm/
+yarn.lock
