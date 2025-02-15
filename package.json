@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "pnpm --filter backend install && pnpm --filter frontend install && pnpm --filter frontend run build",
+    "build": "pnpm install && pnpm --filter frontend  build",
     "start": "pnpm --filter backend start"
   },
   "keywords": [],
