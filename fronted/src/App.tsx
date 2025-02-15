@@ -2,6 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import { AuthenticateWithRedirectCallback } from "@clerk/clerk-react";
 import { Toaster } from "react-hot-toast";
 import AuthCallbackPage from "./pages/auth-callback/AuthCallbackPage";
+import AdminPage from "./pages/admin/AdminPage";
 function App() {
   return (
     <>
@@ -12,6 +13,7 @@ function App() {
         />
 
         <Route path='/auth-callback' element={<AuthCallbackPage />} />
+        <Route path='/admin' element={<AdminPage />} />
       </Routes>
       <Toaster />
     </>
