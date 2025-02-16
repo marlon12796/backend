@@ -2,17 +2,11 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useMusicStore } from "@/stores/useMusicStore";
 import { Calendar, Trash2 } from "lucide-react";
+import { SongsTableSkeleton } from "./SongsTableSkeleton";
+
 
 const SongsTable = () => {
 	const { songs, isLoading, error, deleteSong } = useMusicStore();
-
-	if (isLoading) {
-		return (
-			<div className='flex items-center justify-center py-8'>
-				<div className='text-zinc-400'>Loading songs...</div>
-			</div>
-		);
-	}
 
 	if (error) {
 		return (
@@ -23,34 +17,34 @@ const SongsTable = () => {
 	}
 
 	return (
-		<Table>
-			<TableHeader>
-				<TableRow className='hover:bg-zinc-800/50'>
-					<TableHead className='w-[50px]'></TableHead>
-					<TableHead>Title</TableHead>
-					<TableHead>Artist</TableHead>
-					<TableHead>Release Date</TableHead>
-					<TableHead className='text-right'>Actions</TableHead>
+		isLoading ? <SongsTableSkeleton /> : <Table className="min-h-60">
+			<TableHeader className="">
+				<TableRow className='[padding-block-start:0.5em] items-center hover:bg-zinc-800/50 '>
+					<TableHead className='w-[90px]'></TableHead>
+					<TableHead className="grow max-w-72">Title</TableHead>
+					<TableHead className="grow">Artist</TableHead>
+					<TableHead className="grow max-w-52">Release Date</TableHead>
+					<TableHead className='w-24 text-center'>Actions</TableHead>
 				</TableRow>
 			</TableHeader>
 
 			<TableBody>
 				{songs.map((song) => (
-					<TableRow key={song._id} className='hover:bg-zinc-800/50'>
-						<TableCell>
+					<TableRow key={song._id} className='hover:bg-zinc-800/50 items-center [padding-block:0.2em]'>
+						<TableCell className="w-[90px]">
 							<img src={song.imageUrl} alt={song.title} className='size-10 rounded object-cover' />
 						</TableCell>
-						<TableCell className='font-medium'>{song.title}</TableCell>
-						<TableCell>{song.artist}</TableCell>
-						<TableCell>
+						<TableCell className='font-medium grow flex justify-start max-w-72'>{song.title}</TableCell>
+						<TableCell className="grow flex justify-start ">{song.artist}</TableCell>
+						<TableCell className="grow max-w-52 flex justify-start">
 							<span className='inline-flex items-center gap-1 text-zinc-400'>
 								<Calendar className='h-4 w-4' />
 								{song.createdAt.split("T")[0]}
 							</span>
 						</TableCell>
 
-						<TableCell className='text-right'>
-							<div className='flex gap-2 justify-end'>
+						<TableCell className='text-right w-24'>
+							<div className='flex gap-2 justify-center'>
 								<Button
 									variant={"ghost"}
 									size={"sm"}
@@ -65,6 +59,7 @@ const SongsTable = () => {
 				))}
 			</TableBody>
 		</Table>
+
 	);
 };
 export default SongsTable;
