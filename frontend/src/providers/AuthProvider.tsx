@@ -2,7 +2,6 @@ import { axiosInstance } from "@/lib/axios";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useChatStore } from "@/stores/useChatStore";
 import { useAuth } from "@clerk/clerk-react";
-import { Loader } from "lucide-react";
 import { useEffect, useState } from "react";
 
 const updateApiToken = (token: string | null) => {
@@ -40,13 +39,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 		return () => disconnectSocket();
 	}, [getToken, userId, checkAdminStatus, initSocket, disconnectSocket]);
 
-	if (loading)
-		return (
-			<div className='h-screen w-full flex items-center justify-center'>
-				<Loader className='size-8 text-emerald-500 animate-spin' />
-			</div>
-		);
-
+	if (loading) return <></>
 	return <>{children}</>;
 };
 export default AuthProvider;

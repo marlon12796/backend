@@ -1,13 +1,14 @@
-import { axiosInstance } from "@/lib/axios";
-import { Message, User } from "@/types";
-import { create } from "zustand";
-import { io } from "socket.io-client";
+import { axiosInstance } from '@/lib/axios';
+import { Message, User } from '@/types';
+import { create } from 'zustand';
+import { io } from 'socket.io-client';
+import { AxiosError } from 'axios';
 
 interface ChatStore {
 	users: User[];
 	isLoading: boolean;
 	error: string | null;
-	socket: any;
+	socket: ReturnType<typeof io>;
 	isConnected: boolean;
 	onlineUsers: Set<string>;
 	userActivities: Map<string, string>;
@@ -22,7 +23,7 @@ interface ChatStore {
 	setSelectedUser: (user: User | null) => void;
 }
 
-const baseURL = import.meta.env.MODE === "development" ? "http://localhost:5000" : "/";
+const baseURL = import.meta.env.MODE === 'development' ? 'http://localhost:5000' : '/';
 
 const socket = io(baseURL, {
 	autoConnect: false, // only connect if user is authenticated
@@ -45,10 +46,12 @@ export const useChatStore = create<ChatStore>((set, get) => ({
 	fetchUsers: async () => {
 		set({ isLoading: true, error: null });
 		try {
-			const response = await axiosInstance.get("/users");
+			const response = await axiosInstance.get('/users');
 			set({ users: response.data });
-		} catch (error: any) {
-			set({ error: error.response.data.message });
+		} catch (error: unknown) {
+			if (error instanceof AxiosError && error.response) {
+				set({ error: error.response.data.message });
+			}
 		} finally {
 			set({ isLoading: false });
 		}
@@ -59,23 +62,23 @@ export const useChatStore = create<ChatStore>((set, get) => ({
 			socket.auth = { userId };
 			socket.connect();
 
-			socket.emit("user_connected", userId);
+			socket.emit('user_connected', userId);
 
-			socket.on("users_online", (users: string[]) => {
+			socket.on('users_online', (users: string[]) => {
 				set({ onlineUsers: new Set(users) });
 			});
 
-			socket.on("activities", (activities: [string, string][]) => {
+			socket.on('activities', (activities: [string, string][]) => {
 				set({ userActivities: new Map(activities) });
 			});
 
-			socket.on("user_connected", (userId: string) => {
+			socket.on('user_connected', (userId: string) => {
 				set((state) => ({
 					onlineUsers: new Set([...state.onlineUsers, userId]),
 				}));
 			});
 
-			socket.on("user_disconnected", (userId: string) => {
+			socket.on('user_disconnected', (userId: string) => {
 				set((state) => {
 					const newOnlineUsers = new Set(state.onlineUsers);
 					newOnlineUsers.delete(userId);
@@ -83,19 +86,19 @@ export const useChatStore = create<ChatStore>((set, get) => ({
 				});
 			});
 
-			socket.on("receive_message", (message: Message) => {
+			socket.on('receive_message', (message: Message) => {
 				set((state) => ({
 					messages: [...state.messages, message],
 				}));
 			});
 
-			socket.on("message_sent", (message: Message) => {
+			socket.on('message_sent', (message: Message) => {
 				set((state) => ({
 					messages: [...state.messages, message],
 				}));
 			});
 
-			socket.on("activity_updated", ({ userId, activity }) => {
+			socket.on('activity_updated', ({ userId, activity }) => {
 				set((state) => {
 					const newActivities = new Map(state.userActivities);
 					newActivities.set(userId, activity);
@@ -118,7 +121,7 @@ export const useChatStore = create<ChatStore>((set, get) => ({
 		const socket = get().socket;
 		if (!socket) return;
 
-		socket.emit("send_message", { receiverId, senderId, content });
+		socket.emit('send_message', { receiverId, senderId, content });
 	},
 
 	fetchMessages: async (userId: string) => {
@@ -126,8 +129,8 @@ export const useChatStore = create<ChatStore>((set, get) => ({
 		try {
 			const response = await axiosInstance.get(`/users/messages/${userId}`);
 			set({ messages: response.data });
-		} catch (error: any) {
-			set({ error: error.response.data.message });
+		} catch (error: unknown) {
+			if (error instanceof AxiosError && error.response) set({ error: error.response.data.message });
 		} finally {
 			set({ isLoading: false });
 		}
