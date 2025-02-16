@@ -1,9 +1,10 @@
 import { Router } from "express";
-import { protectRoute, requireAdmin } from "../middleware/auth.middleware.js";
+import { requireAdmin } from "../middleware/auth.middleware.js";
 import { getStats } from "../controller/stat.controller.js";
+import { requireAuth } from "@clerk/express";
 
 const router = Router();
 
-router.get("/", protectRoute, requireAdmin, getStats);
+router.get("/", requireAuth(), requireAdmin, getStats);
 
 export default router;

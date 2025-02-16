@@ -1,23 +1,23 @@
-import { clerkClient } from "@clerk/express";
+import { clerkClient, getAuth } from "@clerk/express";
 
-export const protectRoute = async (req, res, next) => {
-	if (!req.auth.userId) {
-		return res.status(401).json({ message: "Unauthorized - you must be logged in" });
-	}
-	next();
-};
 
 export const requireAdmin = async (req, res, next) => {
+	const { userId } = getAuth(req);
+	if (!userId) {
+		return res.status(401).json({ message: "Unauthorized: No user ID found" });
+	}
+
 	try {
-		const currentUser = await clerkClient.users.getUser(req.auth.userId);
-		const isAdmin = process.env.ADMIN_EMAIL === currentUser.primaryEmailAddress?.emailAddress;
+		const user = await clerkClient.users.getUser(userId);
+		const isAdmin = process.env.ADMIN_EMAIL === user.primaryEmailAddress?.emailAddress;
 
 		if (!isAdmin) {
 			return res.status(403).json({ message: "Unauthorized - you must be an admin" });
 		}
 
+
 		next();
-	} catch (error) {
-		next(error);
+	} catch {
+		return res.status(500).json({ message: "Error fetching user data" });
 	}
 };
