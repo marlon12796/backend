@@ -14,7 +14,7 @@ interface MusicStore {
 	madeForYouSongs: Song[];
 	trendingSongs: Song[];
 	stats: Stats;
-
+	setSongs: (songs: Song[]) => void;
 	fetchAlbums: () => Promise<void>;
 	fetchAlbumById: (id: string) => Promise<void>;
 	fetchFeaturedSongs: () => Promise<void>;
@@ -59,7 +59,9 @@ export const useMusicStore = create<MusicStore>((set) => ({
 	featuredSongs: [],
 	trendingSongs: [],
 	stats: { totalSongs: 0, totalAlbums: 0, totalUsers: 0, totalArtists: 0 },
-
+	setSongs: (songs: Song[]) => {
+		set({ songs });
+	},
 	deleteSong: async (id) => {
 		await handleRequest(
 			() => axiosInstance.delete(`/admin/songs/${id}`),
